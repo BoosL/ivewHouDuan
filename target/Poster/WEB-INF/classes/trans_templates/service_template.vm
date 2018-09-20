@@ -1,0 +1,23 @@
+#foreach($table in $tableList)
+#set($packageName = $package + ".service")
+#set($className = "" + $table.javaName + "Service")
+#set($target = $outpath + "/" + $packageName.replaceAll("\.", "/") + "/" + $className + ".java")
+#set($bean = $package + ".entity." + $table.javaName)
+#set($columns = $table.columns)
+#set($bcolumns = $table.basicColumns)
+#set($pcolumns = $table.primaryColumns)
+#set($fcolumns = $table.foreignColumns)
+//--file--"${target}"
+package ${packageName};
+
+import ${bean};
+import com.bolaa.result.BaseListResult;
+
+import java.util.Map;
+
+public interface ${className} extends BaseService<${table.javaName}>{
+	
+	
+}
+//--fileend----
+#end

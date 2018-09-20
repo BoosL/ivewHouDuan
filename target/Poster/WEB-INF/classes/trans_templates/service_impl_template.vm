@@ -1,0 +1,134 @@
+#foreach($table in $tableList)
+#set($packageName = $package + ".service.impl")
+#set($className = "" + $table.javaName + "ServiceImpl")
+#set($target = $outpath + "/" + $packageName.replaceAll("\.", "/") + "/" + $className + ".java")
+#set($bean = $package + ".entity." + $table.javaName)
+#set($service = $package + ".service." + $table.javaName + "Service")
+#set($columns = $table.columns)
+#set($bcolumns = $table.basicColumns)
+#set($pcolumns = $table.primaryColumns)
+#set($fcolumns = $table.foreignColumns)
+//--file--"${target}"
+package ${packageName};
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.apache.log4j.Logger;
+
+import ${bean};
+import ${package}.service.${table.javaName}Service;
+import ${package}.dao.${table.javaName}Dao;
+import com.bolaa.result.BaseListResult;
+
+
+/**
+ * 
+ * @Name: ${className}
+ * @author: 
+ * @Date: 
+ * @Description:请添加该类的主要描述注释
+ */
+@Service
+public class ${className} implements ${table.javaName}Service {
+		
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+		
+	private Logger logger = Logger.getLogger(getClass());
+	
+	@Autowired
+	private ${table.javaName}Dao ${table.varName}Dao;
+
+	@Override
+	public Serializable save(${table.javaName} o)  throws Exception{
+		return ${table.varName}Dao.save(o);
+	}
+
+	@Override
+	public void update(${table.javaName} o)  throws Exception{
+		${table.varName}Dao.update(o);
+	}
+	
+	@Override
+	public void delete(Serializable id)  throws Exception{
+		${table.javaName} ${table.varName} = ${table.varName}Dao.get(id);
+		if(${table.varName} != null){ 
+			${table.varName}Dao.delete(id);
+		}
+	}
+	
+
+	/**
+	 * 通过id查询
+	 */
+	@Override
+	public ${table.javaName} get(Serializable id)  throws Exception{		
+		return ${table.varName}Dao.get(id);
+	}
+
+	@Override
+	public List<${table.javaName}> find(String hql)  throws Exception{
+		return ${table.varName}Dao.find(hql);
+	}
+	
+	@Override
+	public List<${table.javaName}> find(String hql, Map<String, Object> params)  throws Exception{
+		return ${table.varName}Dao.find(hql, params);
+	}
+
+	@Override
+	public List<${table.javaName}> find(String hql, int page, int rows)  throws Exception{
+		return ${table.varName}Dao.find(hql, page, rows);
+	}
+
+	@Override
+	public List<${table.javaName}> find(String hql, Map<String, Object> params,int page, int rows)  throws Exception{
+		return ${table.varName}Dao.find(hql, params, page, rows);
+	}
+
+	@Override
+	public Map<String, Object> findByPage(Map<String, Object> params,int page, int rows)  throws Exception{
+		Map<String, Object> mp = new HashMap<String, Object>();
+		String hql = "from ${table.javaName} where 1=1 ";
+		Map<String, Object> values = new HashMap<String, Object>();
+		//values.put("userName", params.get("name"));
+		List<${table.javaName}> list = ${table.varName}Dao.find(hql, values, page, rows);
+		Integer count = ${table.varName}Dao.count(hql, values);
+		mp.put("total", count);
+		mp.put("rows", list);
+		return mp;
+	}
+	
+	@Override
+	public BaseListResult<${table.javaName}> findListByPage(Map<String, Object> params,int page, int rows)  throws Exception{
+		BaseListResult<${table.javaName}> result=new BaseListResult<>();
+		String hql = "from ${table.javaName} where 1=1 ";
+		Map<String, Object> values = new HashMap<String, Object>();
+		//values.put("userName", params.get("name"));
+		List<${table.javaName}> list = ${table.varName}Dao.find(hql, values, page, rows);
+		Integer count = ${table.varName}Dao.count(hql, values);
+		result.setTotal(count);
+		result.setResult(list);
+		return result;
+	}
+	
+	
+	@Override
+	public Integer count(String hql)  throws Exception{
+		return ${table.varName}Dao.count(hql);
+	}
+
+	@Override
+	public Integer count(String hql, Map<String, Object> params)  throws Exception{
+		return ${table.varName}Dao.count(hql, params);
+	}
+
+}
+//--fileend----
+#end

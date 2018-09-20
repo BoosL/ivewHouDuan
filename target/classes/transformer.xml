@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transformer>
+	<base>
+		<dbname>MySQL</dbname>
+<!-- 		<driver>net.sourceforge.jtds.jdbc.Driver</driver> -->
+		<driver>com.mysql.jdbc.Driver</driver>
+<!-- 		<url>jdbc:jtds:sqlserver://192.168.1.2:1433/cmhe_pdp</url> -->
+		<!-- <url>jdbc:oracle:thin:@127.0.0.1:1521:ORCL</url> -->
+		<url>jdbc:mysql://139.159.142.120:3306/ad_database</url>
+		<username>root</username>
+		<password>FDWq823ynvca</password>
+		<catalog></catalog>
+		<schema>VOTE</schema>
+		<outpath>E:\MyWorkspaces\Poster\src\main\java</outpath>
+		<!-- E:\MyEclipse\workspace\cqtaxoa\code\mis\mis-manage\src\main\java -->
+		<webpath>D:/code/web</webpath>
+
+		<inputencoding>UTF-8</inputencoding>
+		<outputencoding>UTF-8</outputencoding>
+		<transformer name="vm"
+			class="com.bolaa.common.codegeneration.transformer.VelocityTransformer">
+		</transformer>
+		<templates>
+			<template name="entity" transformer="vm"
+				location="/trans_templates/entity.vm" />
+			<template name="dao" transformer="vm"
+				location="/trans_templates/dao_template.vm" />
+			<template name="daoimpl" transformer="vm"
+				location="/trans_templates/dao_impl_template.vm" />
+			<template name="service" transformer="vm"
+				location="/trans_templates/service_template.vm" />
+			<template name="serviceimpl" transformer="vm"
+				location="/trans_templates/service_impl_template.vm" />
+		</templates>
+		<helpers>
+			<helper name="commonHelper"
+				class="com.bolaa.common.codegeneration.helper.CommonHelper" />
+			<helper name="hibernateHelper"
+				class="com.bolaa.common.codegeneration.helper.HibernateHelper" />
+		</helpers>
+	</base>
+	<modules>
+
+		<!-- <module name="CONNECTOR" package="com.bolaa.manage"
+			 template="entity" execute="true"> -->
+			<module name="CONNECTOR" package="com.bolaa.manage"
+			template="entity,dao,daoimpl,service,serviceimpl" execute="true">
+			<!-- template="entity,dao,daoimpl,service,serviceimpl,action" -->
+			<!-- 主数据 -->
+			<tables>
+ 			   <!--  <table name="USER" /> 
+ 			    <table name="SYS_ROLE" /> 
+ 			    <table name="SYS_ORGANIZATION" />  -->
+ 			   <!--  <table name="BUS_COMMON_SIGN_SUGGESSTION" /> 
+ 			    <table name="BUS_DISPOSE_SUGGESSTION" /> 
+ 			    <table name="BUS_IMAGE_PROPERTY" /> 
+ 			    <table name="BUS_INFO_EDITION" /> 
+ 			    <table name="BUS_LEADER_INSTRCT" /> 
+ 			    <table name="BUS_LEADER_TO_BUS" />  -->
+ 			     <!-- <table name="bus_file" />  -->
+				<!-- <table name="bus_image" /> -->
+				<!-- <table name="user" /> -->
+				<table name="ADAdm" />
+				<table name="ADChannel" />
+				<table name="ADClass" />
+				<table name="ADProject" />
+				<table name="ADRole" />
+				<table name="CostCalculate" />
+				<table name="LdyItems" />
+				<table name="LdySubmit" />
+				<table name="Luodiye" />
+				<table name="Luoldyitems" />
+				<table name="lydlink" />
+				<table name="UserLog" />
+ 			   <!--  <table name="OA_INFORMATION_GATHER_PUB" /> -->
+			    
+			</tables>
+		</module>
+
+	</modules>
+</transformer>

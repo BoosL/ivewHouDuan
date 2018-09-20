@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		alert(123);
+		getData();
+		getIp();
+	})
+	
+	function getData(){
+		$.post("adclass/list",{},function(data){
+			//console.log(data);
+			$.each( data.result, function(key, val){
+				//console.log(key+"----------"+val);
+				$("#tab").append("<tr><td>"+val.classname+"</td><td>"+val.classid+"</td></tr>");
+			});
+			
+		},"json");
+	}
+	
+	function getIp(){
+		
+		$.ajax({
+	      type:"get",    //请求方式
+	      async:true,    //是否异步
+	      url:"http://pv.sohu.com/cityjson?ie=utf-8",
+	      dataType:"jsonp",    //跨域json请求一定是jsonp
+	      jsonp: "callbackparam",    //跨域请求的参数名，默认是callback
+	     beforeSend: function() {
+	         //请求前的处理
+	     },
+	 
+	     success: function(data) {
+	         //请求成功处理，和本地回调完全一样
+	         console.log(data)
+	     },
+	 
+	     complete: function() {
+	         //请求完成的处理
+	     },
+	 
+	     error: function() {
+	         //请求出错处理
+	     }
+	 });
+	 
+	}
+</script>
+</head>
+<body>
+	<div>
+		<table id="tab">
+		</table>
+	</div>
+</body>
+</html>

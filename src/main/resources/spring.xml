@@ -1,0 +1,45 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns="http://www.springframework.org/schema/beans" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<!-- 引入属性文件 -->
+<!-- 	<context:property-placeholder
+		location="classpath:config.properties,classpath:hibernate.properties" />  -->
+
+	<!-- 自动扫描dao和service包(自动注入) -->
+	<!-- <context:component-scan base-package="com.bolaa.manage.dao,com.bolaa.manage.service,com.bolaa.controller" /> -->
+	<context:component-scan base-package="com.bolaa.manage.dao,com.bolaa.manage.service" />
+	
+	<bean class="com.bolaa.common.SpringUtils"/>
+	
+	
+	<!-- <bean id="taskBean" class="com.bolaa.tasks.TestTask"></bean>
+	<task:scheduled-tasks> <task:scheduled ref="taskBean" method="testTask" cron="0 */3 * * * ?" /> </task:scheduled-tasks>
+	 -->
+	 <!-- add by 增加环境字符集设置[begin] -->
+	<!-- 设置环境变量字符集 -->
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetClass" value="java.lang.System" />
+		<property name="targetMethod" value="setProperty" />
+		<property name="arguments">
+			<list>
+				<value>file.encoding</value>
+				<value>UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	<!-- add by wengjf 增加环境字符集设置[end] -->
+	 <bean id="commonProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
+		<property name="ignoreResourceNotFound" value="true" />
+	</bean>
+
+    <!-- 加入redis-->
+	<import resource="redis.xml"/>
+</beans>  

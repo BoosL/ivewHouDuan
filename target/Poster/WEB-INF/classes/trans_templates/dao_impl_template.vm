@@ -1,0 +1,27 @@
+#foreach($table in $tableList)
+#set($packageName = $package + ".dao.impl")
+#set($interfaceName = $table.javaName + "Dao")
+#set($interface = $package + ".dao." + ${interfaceName})
+#set($className = "" + ${table.javaName} + "DaoImpl")
+#set($bean = $package + ".entity." + $table.javaName)
+#set($target = $outpath + "/" + $packageName.replaceAll("\.", "/") + "/" + $className + ".java")
+#set($columns = $table.columns)
+#set($bcolumns = $table.basicColumns)
+#set($pcolumns = $table.primaryColumns)
+#set($fcolumns = $table.foreignColumns)
+//--file--"${target}"
+package ${packageName};
+
+import org.springframework.stereotype.Repository;
+import ${interface};
+import ${bean};
+
+
+@Repository
+public class ${className} extends GenericDaoImpl<${table.javaName}> 
+		implements ${interfaceName} {
+	
+	
+}
+//--fileend----
+#end

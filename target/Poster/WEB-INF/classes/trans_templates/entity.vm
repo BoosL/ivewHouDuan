@@ -1,0 +1,163 @@
+#macro(cutTypeName $colname)
+#set($loc = ${colname.lastIndexOf(".")} + 1)
+#if(${loc} > 0)${colname.substring(${loc})}#else${colname}#end
+#end
+#foreach($table in $tableList)
+#set($packageName = $package + ".entity")
+#set($className = $table.javaName)
+#set($target = $outpath + "/" + $packageName.replaceAll("\.", "/") + "/" + $className + ".java")
+#set($columns = $table.columns)
+#set($bcolumns = $table.basicColumns)
+#set($pcolumns = $table.primaryColumns)
+#set($fcolumns = $table.foreignColumns)
+#set($serialVersionUID = ${className.hashCode()} * ${className.hashCode()})
+//--file--"${target}"
+package $packageName;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+
+
+
+#set($elist = ${commonHelper.emptyList()})
+#foreach( $column in $columns )
+#if(${column.typeShortName.indexOf(".")} > 0 && !${elist.contains(${column.typeShortName})} && ${elist.add(${column.typeShortName})})#end
+#end
+#foreach( ${tname} in ${elist} )
+import ${tname};
+#end
+
+// 数据库表(${table.name} ${table.label})映射对象
+@Entity
+@Table(name = "${table.name}")
+public class ${className}  extends RequestBody
+		implements Serializable{
+
+	private static final long serialVersionUID = ${serialVersionUID}L;
+	
+	// -----------------Properties (Instance Variables)----------------- //
+
+#foreach( $column in $pcolumns )
+	/* Primary key Column -- ${column.name}*/
+#if(${column.foreignKey})
+	/* Foreign key Reference(${column.foreignKeyTable} -- ${column.foreignKeyColumn})*/
+#end
+	private #cutTypeName(${column.typeShortName}) $column.varName = null;
+#end
+	
+#foreach( $column in $bcolumns )
+	/* Column -- ${column.label} --length:${column.sqlColumnLength}--decimalLen:${column.sqlDecimalLength}*/
+	#if(${column.foreignKey})
+	/* Foreign key Reference(${column.foreignKeyTable} -- ${column.foreignKeyColumn})*/
+	#end
+	private #cutTypeName(${column.typeShortName}) $column.varName = null;
+
+#end
+
+
+	public ${className}(){
+	}
+
+	// -----------------Accessors (getters and setters)----------------- //
+ 
+#foreach( $column in $pcolumns )
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "${column.name}", insertable = true, updatable = true, nullable = false)
+	public #cutTypeName(${column.typeShortName}) get${column.javaName}() {
+		return this.$column.varName;
+	}
+
+	public void set${column.javaName}(#cutTypeName(${column.typeShortName}) $column.varName) {
+		this.$column.varName = $column.varName;
+	}
+	 
+#end
+
+#foreach( $column in $bcolumns )
+
+	#if(${column.name} == "CREATER" || ${column.name} == "CREATER_NAME" || ${column.name} == "CREATE_DATE" || ${column.name} == "UPDATER" || ${column.name} == "UPDATER_NAME" || ${column.name} == "UPDATE_DATE")
+	
+	@Column(name="${column.name}", insertable=true, updatable=true) 
+	public #cutTypeName(${column.typeShortName}) get${column.javaName}() {
+		return this.$column.varName;
+	}
+	public void set${column.javaName}(#cutTypeName(${column.typeShortName}) $column.varName) {
+		this.$column.varName = $column.varName;
+	}
+	
+	#else
+	@Column(name="${column.name}")
+	public #cutTypeName(${column.typeShortName}) get${column.javaName}() {
+		return this.$column.varName;
+	}
+	public void set${column.javaName}(#cutTypeName(${column.typeShortName}) $column.varName) {
+		this.$column.varName = $column.varName;
+	}
+	#end
+#end
+	
+	@Embedded
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+#if($pcolumns.size() == 0)
+	#set($tmpcolumns = $columns)
+#else
+	#set($tmpcolumns = $pcolumns)
+#end
+#foreach( $column in $tmpcolumns)
+		result = prime * result + ((${column.varName} == null) ? 0 : ${column.varName}.hashCode());
+#end
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final ${table.javaName} other = (${table.javaName}) obj;
+#if($pcolumns.size() == 0)
+	#set($tmpcolumns = $columns)
+#else
+	#set($tmpcolumns = $pcolumns)
+#end
+#foreach( $column in $tmpcolumns )
+		if (${column.varName} == null) {
+			if (other.${column.varName} != null)
+				return false;
+		} else if (!${column.varName}.equals(other.${column.varName}))
+			return false;
+#end
+		return true;
+	}
+	
+	public String toString()
+	{
+	    final String TAB = "    ";
+	    String str = "";
+	    str = "${className} ( "
+#foreach( $column in $columns )
+	        + "${column.javaName} = " + this.${column.varName} + TAB
+#end		
+	        + " )";
+	
+	    return str;
+	}
+
+} 
+//--fileend--
+#end

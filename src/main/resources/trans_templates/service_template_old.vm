@@ -1,0 +1,46 @@
+#foreach($table in $tableList)
+#set($packageName = $package + ".service")
+#set($className = "" + $table.javaName + "Service")
+#set($target = $outpath + "/" + $packageName.replaceAll("\.", "/") + "/" + $className + ".java")
+#set($bean = $package + ".entity." + $table.javaName)
+#set($columns = $table.columns)
+#set($bcolumns = $table.basicColumns)
+#set($pcolumns = $table.primaryColumns)
+#set($fcolumns = $table.foreignColumns)
+//--file--"${target}"
+package ${packageName};
+
+import ${bean};
+import com.bolaa.result.BaseListResult;
+
+import java.util.Map;
+
+public interface ${className} extends BaseService<${table.javaName}>{
+	/**保存*/
+	public Serializable save(${table.javaName} o) throws Exception;
+	/**更新*/
+	public void update(${table.javaName} o) throws Exception;
+	/**删除*/
+	public void delete(Serializable id) throws Exception;
+	/**根据id获取对象*/
+	public ${table.javaName} get(Serializable id) throws Exception;
+	/**根据hql查询*/
+	public List<${table.javaName}> find(String hql) throws Exception;
+	/**根据hql和参数查询*/
+	public List<${table.javaName}> find(String hql, Map<String, Object> params) throws Exception;
+	/**根据hql、页数和每页条数分页查询*/
+	public List<${table.javaName}> find(String hql, int page, int rows) throws Exception;
+	/**根据hql、参数、页数和每页条数分页查询*/
+	public List<${table.javaName}> find(String hql, Map<String, Object> params, int page, int rows) throws Exception;
+	/**根据参数、页数和每页条数分页查询*/
+	public Map<String, Object> findByPage(Map<String, Object> params, int page, int rows) throws Exception;
+	/**根据参数、页数和每页条数分页查询*/
+	public BaseListResult<${table.javaName}> findListByPage(Map<String, Object> params, int page, int rows) throws Exception;
+	/**根据hql统计*/
+	public Integer count(String hql) throws Exception;
+	/**根据hql和参数统计*/
+	public Integer count(String hql, Map<String, Object> params) throws Exception;
+	
+}
+//--fileend----
+#end
