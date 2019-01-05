@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.0">
+  <library name="Maven: com.fasterxml.jackson.core：jackson-databind~> 2.8.11.3">
     <CLASSES>
       <root url="jar://D:/Maven/repository/com/fasterxml/jackson/core/jackson-databind/2.8.0/jackson-databind-2.8.0.jar!/" />
     </CLASSES>
